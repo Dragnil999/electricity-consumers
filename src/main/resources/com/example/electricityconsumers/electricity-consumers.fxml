@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox fx:id="root" alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.electricityconsumers.ui.ConsumersView">
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+      <children>
+        <Button onAction="#activateKettle" text="Kettle" />
+      </children>
+   </VBox>
+   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+      <children>
+         <Label fx:id="bulbLabel" text="Выкл.">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin>
+         </Label>
+         <Button mnemonicParsing="false" onAction="#activateBulb" text="Bulb On">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin></Button>
+         <Button mnemonicParsing="false" onAction="#deactivateBulb" text="Bulb Off" />
+      </children>
+   </VBox>
+   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+      <children>
+         <Label fx:id="pcLabel" text="Выкл.">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin>
+         </Label>
+         <Button mnemonicParsing="false" onAction="#activateComputer" text="PC On">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin></Button>
+         <Button mnemonicParsing="false" onAction="#deactivateComputerByUser" text="PC Off" />
+      </children>
+   </VBox>
+</HBox>
