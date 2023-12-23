@@ -10,7 +10,16 @@
   </padding>
    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
       <children>
-        <Button onAction="#activateKettle" text="Kettle" />
+         <Label fx:id="kettleLabel" text="Выкл.">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin>
+         </Label>
+        <Button onAction="#activateKettle" text="Kettle On">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin></Button>
+         <Button mnemonicParsing="false" onAction="#deactivateKettle" text="Kettle Off" />
       </children>
    </VBox>
    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">

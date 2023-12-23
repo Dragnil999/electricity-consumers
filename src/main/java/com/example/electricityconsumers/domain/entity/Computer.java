@@ -59,6 +59,7 @@ public class Computer extends Consumer {
     public void activate() {
         processUsing();
         active = true;
+        powerOn = true;
     }
 
     @Override

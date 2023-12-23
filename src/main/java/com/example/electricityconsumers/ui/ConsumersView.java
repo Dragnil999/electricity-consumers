@@ -34,10 +34,12 @@ public class ConsumersView implements Initializable {
         }
 
         @Override
-        public void onMinBreakdown(int index) { }
+        public void onMinBreakdown(int index) {
+        }
 
         @Override
-        public void onMaxWarning(int index) { }
+        public void onMaxWarning(int index) {
+        }
 
         @Override
         public void onMinWarning(int index) {
@@ -53,22 +55,23 @@ public class ConsumersView implements Initializable {
 
         @Override
         public void onMinBreakdown(int index) {
-            System.out.println("Батарея села");
+            System.out.println("Батарея села, данные потеряны...");
             deactivateComputer();
         }
 
         @Override
-        public void onMaxWarning(int index) {}
+        public void onMaxWarning(int index) {
+        }
 
         @Override
-        public void onMinWarning(int index) {}
+        public void onMinWarning(int index) {
+        }
     };
 
     private final Indicator.IndicatorCallback powerIndicatorCallback = new Indicator.IndicatorCallback() {
         @Override
         public void onMaxBreakdown(int index) {
             System.out.println("Перегрузка");
-            powerValue = 0.0;
             for (Consumer consumer : consumers) {
                 consumer.deactivate();
             }
@@ -76,17 +79,23 @@ public class ConsumersView implements Initializable {
         }
 
         @Override
-        public void onMinBreakdown(int index) { }
+        public void onMinBreakdown(int index) {
+        }
 
         @Override
-        public void onMaxWarning(int index) { }
+        public void onMaxWarning(int index) {
+        }
 
         @Override
-        public void onMinWarning(int index) { }
+        public void onMinWarning(int index) {
+        }
     };
 
     @FXML
     private HBox root;
+
+    @FXML
+    private Label kettleLabel;
 
     @FXML
     private Label bulbLabel;
@@ -96,7 +105,9 @@ public class ConsumersView implements Initializable {
 
     private final List<Consumer> consumers = new ArrayList<>();
 
-    private Double powerValue = 0.0;
+    private final List<Consumer> consumersInCircuit = new ArrayList<>();
+
+    private Double powerValue = MAX_POWER;
 
     private final Indicator kettleIndicator = new Indicator(kettleIndicatorCallback);
 
@@ -124,52 +135,62 @@ public class ConsumersView implements Initializable {
     }
 
     public void activateKettle() {
-        powerValue += kettle.getPower();
+        kettleLabel.setText("Вкл.");
+        consumersInCircuit.add(kettle);
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
-        kettle.activate();
+        if (powerValue < MAX_POWER) {
+            kettle.activate();
+        }
     }
 
-    private void deactivateKettle() {
-        powerValue -= kettle.getPower();
+    public void deactivateKettle() {
+        kettleLabel.setText("Выкл.");
+        consumersInCircuit.remove(kettle);
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
         kettle.deactivate();
     }
 
     public void activateBulb() {
         bulbLabel.setText("Вкл.");
-        powerValue += bulb.getPower();
+        consumersInCircuit.add(bulb);
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
-        bulb.activate();
+        if (powerValue < MAX_POWER) {
+            bulb.activate();
+        }
     }
 
     public void deactivateBulb() {
         bulbLabel.setText("Выкл.");
-        powerValue -= bulb.getPower();
+        consumersInCircuit.remove(bulb);
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
         bulb.deactivate();
     }
 
     public void activateComputer() {
         pcLabel.setText("Вкл.");
-        powerValue += computer.getPower();
+        consumersInCircuit.add(computer);
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
-        computer.activate();
+        if (powerValue < MAX_POWER) {
+            computer.activate();
+        }
     }
 
     public void deactivateComputer() {
         pcLabel.setText("Вкл.");
-        powerValue -= computer.getPower();
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
         computer.deactivate();
     }
 
     public void deactivateComputerByUser() {
         pcLabel.setText("Выкл.");
-        if (powerValue > computer.getPower()) {
-            powerValue -= computer.getPower();
-        } else {
-            powerValue = 0.0;
-        }
+        consumersInCircuit.remove(computer);
+        calculatePower();
         powerIndicator.setValueToIndicatorByIndex(0, String.valueOf(powerValue));
         computer.deactivateByUser();
     }
@@ -196,6 +217,13 @@ public class ConsumersView implements Initializable {
         batteryIndicator.setMaxWarning(0);
         batteryIndicator.setMinWarning(0);
         batteryIndicator.addNewIndicator(String.valueOf(80));
+    }
+
+    private void calculatePower() {
+        powerValue = 0.0;
+        for (Consumer consumer : consumersInCircuit) {
+            powerValue += consumer.getPower();
+        }
     }
 
     public void handleExit(Stage stage) {
